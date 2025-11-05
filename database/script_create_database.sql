@@ -1,7 +1,12 @@
+CREATE DATABASE db_gerenciamento_notas;
+
+USE db_gerenciamento_notas;
+
 CREATE TABLE IF NOT EXISTS `tb_disciplina` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
 	`nome` varchar(255) NOT NULL DEFAULT '50',
 	`periodo` int NOT NULL,
+	`carga_horaria` decimal(10,0) NOT NULL,
 	`professor_Id` int,
 	PRIMARY KEY (`id`)
 );
@@ -9,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `tb_disciplina` (
 CREATE TABLE IF NOT EXISTS `tb_alunos` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
 	`email` varchar(50) NOT NULL UNIQUE,
-	`nome_completo` int NOT NULL DEFAULT '200',
+	`nome_completo` int NOT NULL,
 	`ira` decimal(10,0) NOT NULL,
 	`periodo_ingresso` char(6) NOT NULL,
 	`status_matricula` varchar(50) NOT NULL,
@@ -29,10 +34,9 @@ CREATE TABLE IF NOT EXISTS `tb_professores` (
 CREATE TABLE IF NOT EXISTS `tb_aluno_disciplina` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
 	`aluno_Id` int NOT NULL,
-	`disciplina_id` int NOT NULL,
-	`nota_avaliacao_1` double NOT NULL,
-	`nota_avaliacao_2` double NOT NULL,
-	`nota_avaliacao_3` double NOT NULL,
+	`avaliacao_id` int NOT NULL,
+	`nota` decimal(10,0) NOT NULL,
+	`observacoes` varchar(255) DEFAULT '100',
 	PRIMARY KEY (`id`)
 );
 
@@ -46,9 +50,20 @@ CREATE TABLE IF NOT EXISTS `tb_usuarios` (
 	PRIMARY KEY (`id`)
 );
 
-ALTER TABLE `tb_disciplina` ADD CONSTRAINT `tb_disciplina_fk3` FOREIGN KEY (`professor_Id`) REFERENCES `tb_professores`(`id`);
+CREATE TABLE IF NOT EXISTS `tb_avaliacoes` (
+	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
+	`id_disciplina` int NOT NULL,
+	`nome` varchar(50) NOT NULL,
+	`peso` decimal(10,0) NOT NULL DEFAULT '1',
+	`data_avaliacao` date,
+	PRIMARY KEY (`id`)
+);
+
+ALTER TABLE `tb_disciplina` ADD CONSTRAINT `tb_disciplina_fk4` FOREIGN KEY (`professor_Id`) REFERENCES `tb_professores`(`id`);
 ALTER TABLE `tb_alunos` ADD CONSTRAINT `tb_alunos_fk6` FOREIGN KEY (`usuario_Id`) REFERENCES `tb_usuarios`(`id`);
 ALTER TABLE `tb_professores` ADD CONSTRAINT `tb_professores_fk4` FOREIGN KEY (`usuario_Id`) REFERENCES `tb_usuarios`(`id`);
 ALTER TABLE `tb_aluno_disciplina` ADD CONSTRAINT `tb_aluno_disciplina_fk1` FOREIGN KEY (`aluno_Id`) REFERENCES `tb_alunos`(`id`);
 
-ALTER TABLE `tb_aluno_disciplina` ADD CONSTRAINT `tb_aluno_disciplina_fk2` FOREIGN KEY (`disciplina_id`) REFERENCES `tb_disciplina`(`id`);
+ALTER TABLE `tb_aluno_disciplina` ADD CONSTRAINT `tb_aluno_disciplina_fk2` FOREIGN KEY (`avaliacao_id`) REFERENCES `tb_avaliacoes`(`id`);
+
+ALTER TABLE `tb_avaliacoes` ADD CONSTRAINT `tb_avaliacoes_fk1` FOREIGN KEY (`id_disciplina`) REFERENCES `tb_disciplina`(`id`);
