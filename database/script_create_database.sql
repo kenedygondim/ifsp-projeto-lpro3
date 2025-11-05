@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `tb_professores` (
 	PRIMARY KEY (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `tb_aluno_disciplina` (
+CREATE TABLE IF NOT EXISTS `tb_notas` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
 	`aluno_Id` int NOT NULL,
 	`avaliacao_id` int NOT NULL,
